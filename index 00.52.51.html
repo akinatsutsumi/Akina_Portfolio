@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKINA TSUTSUMI | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            width: 100%;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: rgba(0, 0, 0, 0.85);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            z-index: 9999;
+            display: flex;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 0 15px;
+        }
+
+        nav a {
+            color: rgba(0, 0, 0, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            opacity: 0.5;
+        }
+
+        .hero {
+            width: 100%;
+            min-width: 100vw;
+            height: 100vh;
+            background-image: url('assets/images/hero/hero-image.jpg');
+            background-size: 100% auto;
+            background-position: center 57%;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+            left: 0;
+            right: 0;
+        }
+
+        .hero h1 {
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 1.7rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .hero-bottom {
+            position: absolute;
+            bottom: 8rem;
+            left: 5rem;
+            text-align: left;
+            z-index: 10;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-bottom h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .hero-bottom p {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.8;
+        }
+
+        .hero-name {
+            position: absolute;
+            bottom: 3rem;
+            left: 5rem;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            font-weight: 300;
+            z-index: 10;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .hero-about-link {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-left: 2rem;
+            padding: 0.5rem 1.5rem;
+            border: 1.5px solid white;
+            border-radius: 25px;
+            transition: all 0.3s;
+            vertical-align: middle;
+        }
+
+        .hero-about-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .main-page {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 5%;
+            background: #fafafa;
+            margin: 0;
+        }
+
+        .main-page h1 {
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .main-page .subtitle {
+            font-size: 1rem;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 3rem;
+            letter-spacing: 2px;
+        }
+
+        .main-page .tagline {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            line-height: 1.3;
+        }
+
+        .main-page .links {
+            margin-top: 2rem;
+        }
+
+        .main-page .links a {
+            display: block;
+            color: rgba(0, 0, 0, 0.6);
+            text-decoration: underline;
+            margin: 1rem 0;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+        }
+
+        .main-page .links a:hover {
+            opacity: 0.5;
+        }
+
+        .main-page .description {
+            max-width: 900px;
+            margin: 3rem auto 0;
+            font-size: 0.95rem;
+            line-height: 2;
+            letter-spacing: 1px;
+            color: rgba(0, 0, 0, 0.6);
+            text-transform: uppercase;
+        }
+
+        .main-page .location {
+            margin-top: 4rem;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .main-page .social {
+            margin-top: 3rem;
+            display: flex;
+            gap: 2.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-page .social a {
+            color: rgba(0, 0, 0, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-page .social svg {
+            width: 32px;
+            height: 32px;
+            fill: rgba(0, 0, 0, 0.7);
+            stroke: rgba(0, 0, 0, 0.7);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .main-page .social a:hover svg {
+            fill: rgba(0, 0, 0, 1);
+            stroke: rgba(0, 0, 0, 1);
+            transform: scale(1.15);
+        }
+
+        .copy-tooltip {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .copy-tooltip.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-name {
+                left: 2rem;
+                font-size: 1.3rem;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .hero-about-link {
+                margin-left: 0;
+            }
+
+            .hero-bottom {
+                left: 2rem;
+                right: 2rem;
+            }
+
+            .main-page h1 {
+                font-size: 2rem;
+            }
+
+            .main-page .tagline {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .main-page .social {
+                gap: 1.5rem;
+            }
+
+            .main-page .social svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        .version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html#home">HOME</a>
+        <a href="index.html#main">MAIN</a>
+        <a href="about.html">ABOUT</a>
+        <a href="project.html">PROJECT</a>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-bottom">
+            <h2>CHANGE PEOPLE LIVE AROUND BODY</h2>
+            <p>DESIGN FROM NEEDS – FOCUSING ON WHAT USERS REQUIRE,<br>WHAT THEY CAN USE, AND THE CONVENIENCE THEY SEEK IN LIFE</p>
+        </div>
+        <div class="hero-name">
+            AKINA TSUTSUMI
+            <a href="about.html" class="hero-about-link">ABOUT ME</a>
+        </div>
+    </section>
+
+    <section id="main" class="main-page">
+        <div>
+            <h1>AKINA TSUTSUMI</h1>
+            <p class="subtitle">(FASHION DESIGNER/INNOVATOR)</p>
+            
+            <p style="margin: 2rem 0; font-size: 0.9rem; color: rgba(0,0,0,0.6);">with</p>
+            
+            <h2 class="tagline">FUNCTION SHAPE BY STORY<br>WORN BY MOTION</h2>
+            
+            <div class="links">
+                <a href="about.html">[CV]</a>
+                <a href="project.html">[PROJECT]</a>
+                <a href="project.html#shoes">[CORDWAINERS FOOTWEAR AWARDS 2025 – BEST MA (FINALIST)]</a>
+            </div>
+
+            <p class="description">
+                DESIGN FROM NEEDS – FOCUSING ON WHAT USERS REQUIRE, WHAT THEY CAN USE, AND THE CONVENIENCE THEY SEEK IN LIFE.<br><br>
+                AS BOTH DESIGNER AND ATHLETE, I APPROACH FROM AN INSIDER PERSPECTIVE – COMBINING INNOVATION WITH EMPATHY, AND PLACING THE USER AT THE HEART OF DESIGN.
+            </p>
+
+            <p class="location">BASE TOKYO - JP / LONDON - UK</p>
+
+            <div class="social">
+                <a href="#home" title="Home">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                </a>
+                
+                <a href="https://www.instagram.com/akina.tsutsumi?igsh=N2gwNWtsdmM3Y203" target="_blank" title="Instagram">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="4" fill="none" stroke-width="2"/>
+                        <circle cx="17" cy="7" r="1.5"/>
+                    </svg>
+                </a>
+                
+                <a href="#" onclick="copyEmail(event)" title="Email: akina0825.uk@gmail.com">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="copyTooltip" class="copy-tooltip">Email copied to clipboard!</div>
+    <div class="version">v2.6</div>
+
+    <script>
+        function copyEmail(event) {
+            event.preventDefault();
+            const email = 'akina0825.uk@gmail.com';
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(email).then(() => {
+                        showCopyTooltip();
+                    }).catch(() => {
+                        document.execCommand('copy');
+                        showCopyTooltip();
+                    });
+                } else {
+                    document.execCommand('copy');
+                    showCopyTooltip();
+                }
+            } catch(err) {
+                console.error('Failed to copy email:', err);
+            }
+            
+            document.body.removeChild(tempInput);
+        }
+
+        function showCopyTooltip() {
+            const tooltip = document.getElementById('copyTooltip');
+            tooltip.classList.add('show');
+            
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 2000);
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('onclick') && this.getAttribute('onclick').includes('copyEmail')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,2783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKINA TSUTSUMI | Project v3.19</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: rgba(0, 0, 0, 0.85);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            z-index: 10000;
+            display: flex;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 0 15px;
+        }
+
+        nav a {
+            color: rgba(0, 0, 0, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            opacity: 0.5;
+        }
+
+        /* Project Page */
+        .project-page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 5rem 5%;
+            background: white;
+        }
+
+        .project-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px minmax(auto, 1000px);
+            gap: 5rem;
+            align-items: start;
+        }
+
+        /* Left Navigation - FIXED STICKY */
+        .project-nav {
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+            height: fit-content;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            z-index: 900;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            background: white;
+            padding: 2rem 1.5rem;
+            border-radius: 8px;
+        }
+
+        .project-nav h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .project-nav ul {
+            list-style: none;
+        }
+
+        .project-nav li {
+            margin-bottom: 0.8rem;
+        }
+
+        .project-nav a {
+            color: rgba(0, 0, 0, 0.6);
+            text-decoration: none;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            transition: all 0.3s;
+            display: block;
+            padding-left: 0.8rem;
+            border-left: 3px solid transparent;
+            margin-left: -3px;
+        }
+
+        .project-nav a:hover {
+            color: rgba(0, 0, 0, 0.95);
+            border-left-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .project-nav a.active {
+            border-left: 3px solid rgba(0, 0, 0, 0.85);
+            color: rgba(0, 0, 0, 0.85);
+            font-weight: 500;
+            padding-left: calc(0.8rem - 3px);
+            margin-left: 0;
+        }
+
+        .project-nav .category {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-nav .indent {
+            padding-left: 1rem;
+        }
+
+        /* Right Content Area */
+        .project-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .project-content .subtitle {
+            font-size: 1rem;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .project-content h4 {
+            font-size: 1rem;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        .project-content h2 {
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .project-content h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .project-content p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+            margin-bottom: 1rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* PROJECT VIEWER */
+        .project-viewer {
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            display: flex;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tab-nav-item {
+            padding: 1.2rem 2rem;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            color: rgba(0, 0, 0, 0.6);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.3s, background 0.3s;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .tab-nav-item:hover {
+            color: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .tab-nav-item.active {
+            color: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.03);
+            font-weight: 600;
+            border-bottom: 3px solid #000;
+            margin-bottom: -2px;
+        }
+
+        /* Gallery Container */
+        .gallery-container {
+            height: 600px;
+            overflow-y: auto;
+            padding: 2rem;
+            background: white;
+            scroll-behavior: smooth;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            background: #e8e8e8;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            aspect-ratio: 1615 / 841;
+            scroll-margin-top: 2rem;
+        }
+
+        /* YEAR 2 PROJECT SPECIFIC - Same ratio as other galleries */
+        .gallery-grid.year2-grid .gallery-item {
+            aspect-ratio: 1615 / 841;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item-number {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* IMAGE MODAL */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100000;
+            overflow: hidden;
+        }
+
+        .image-modal.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 3rem 2rem;
+            scroll-behavior: smooth;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-image-container {
+            display: flex;
+            gap: 2rem;
+            height: 100%;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .modal-image-item {
+            flex-shrink: 0;
+            width: 700px;
+            height: auto;
+        }
+
+        .modal-image-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-description {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 3rem;
+            border-radius: 12px 12px 0 0;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .modal-description h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: rgba(0, 0, 0, 0.9);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-description p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .modal-nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-nav-prev {
+            left: 2rem;
+        }
+
+        .modal-nav-next {
+            right: 2rem;
+        }
+
+        /* Scrollbars */
+        .modal-content::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .gallery-container::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .gallery-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .gallery-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .gallery-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* ACHIEVEMENT SECTION */
+        .achievement-section {
+            max-width: 600px;
+            margin: 3rem auto;
+            text-align: center;
+        }
+
+        .achievement-item {
+            margin-bottom: 3rem;
+        }
+
+        .achievement-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.9);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .achievement-desc {
+            font-size: 0.8rem;
+            color: rgba(0, 0, 0, 0.4);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .achievement-title a {
+            transition: opacity 0.3s;
+        }
+
+        .achievement-title a:hover {
+            opacity: 0.6;
+            text-decoration: underline;
+        }
+
+        /* Process Videos */
+        .process-section {
+            margin: 3rem 0;
+        }
+
+        .process-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .video-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .video-container video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* Horizontal video for installation videos - UPDATED TO 16:9 */
+        .video-container-horizontal {
+            grid-column: span 1;
+        }
+
+        .video-container-horizontal video {
+            aspect-ratio: 16 / 9;
+            height: auto;
+            max-height: 400px;
+        }
+
+        .video-caption {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Project Detail Cards */
+        .project-detail-section {
+            margin: 3rem 0;
+        }
+
+        .project-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-detail-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .project-detail-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .project-detail-image {
+            width: 100%;
+            height: 280px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .project-detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-detail-caption {
+            padding: 1.5rem;
+            text-align: center;
+            background: white;
+        }
+
+        .project-detail-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Project Detail Modal */
+        .project-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100000;
+            overflow-y: auto;
+            padding: 3rem 2rem;
+        }
+
+        .project-detail-modal.active {
+            display: block;
+        }
+
+        .project-detail-modal-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            position: relative;
+            padding: 3rem;
+        }
+
+        .project-detail-modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.6);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .project-detail-modal-close:hover {
+            color: rgba(0, 0, 0, 0.9);
+            transform: rotate(90deg);
+        }
+
+        .project-detail-modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .project-detail-modal-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.9);
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .project-detail-modal-images {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .project-detail-modal-image-item {
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+        }
+
+        .project-detail-modal-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-detail-modal-section {
+            margin-bottom: 2rem;
+        }
+
+        .project-detail-modal-section h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .project-detail-modal-section p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+        }
+
+        .project-detail-modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .project-detail-modal-section li {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-detail-modal-section li:before {
+            content: '•';
+            position: absolute;
+            left: 0.5rem;
+        }
+
+        /* IFF Photo Gallery */
+        .iff-photo-gallery {
+            margin: 3rem 0;
+        }
+
+        .iff-photo-scroll {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 2rem 0;
+        }
+
+        .iff-photo-item {
+            flex-shrink: 0;
+            width: 800px;
+            height: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .iff-photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .iff-photo-scroll::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .iff-photo-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .iff-photo-scroll::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .iff-photo-scroll::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .iff-photo-caption {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Mixed Reality Section */
+        .mixed-reality-section {
+            margin: 3rem 0;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .mixed-reality-video {
+            max-width: 800px;
+            margin: 2rem auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .mixed-reality-video video {
+            width: 100%;
+            display: block;
+            background: #000;
+        }
+
+        .mixed-reality-info {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .mixed-reality-credit {
+            font-size: 0.85rem;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .mixed-reality-description {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+        }
+
+        /* Description Area */
+        .description-area {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            margin: 2rem 0;
+        }
+
+        .description-area h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        .description-area p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* PPT Presentation Section */
+        .ppt-presentation-section {
+            margin: 3rem 0;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .ppt-presentation-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ppt-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .ppt-viewer {
+            width: 100%;
+            height: 600px;
+            border: none;
+            background: #000;
+        }
+
+        .ppt-narration {
+            padding: 2rem;
+            background: white;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .ppt-narration h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .ppt-narration-text {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+            white-space: pre-line;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Typewriter Effect */
+        .narration-typewriter {
+            opacity: 0;
+            animation: fadeIn 0.3s ease-in forwards;
+        }
+
+        .narration-typewriter.active .narration-paragraph span {
+            display: inline-block;
+            opacity: 0;
+            animation: typeChar 0.05s ease-in forwards;
+        }
+
+        .narration-paragraph {
+            margin-bottom: 0;
+        }
+
+        .narration-spacer {
+            height: 1.8em;
+        }
+
+        @keyframes typeChar {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* PDF Display */
+        .pdf-display-section {
+            margin: 3rem 0;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Team Members */
+        .team-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-role {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-name {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.85);
+            margin-bottom: 0.3rem;
+        }
+
+        .team-name a {
+            color: rgba(0, 0, 0, 0.85);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .team-name a:hover {
+            opacity: 0.6;
+            text-decoration: underline;
+        }
+
+        .team-org {
+            font-size: 0.75rem;
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 300;
+        }
+
+        /* ========== LOOK BOOK STYLES ========== */
+        .lookbook-section {
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .lookbook-preview {
+            width: 200px;
+            height: 280px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 0 auto 2rem;
+        }
+
+        .lookbook-preview:hover {
+            transform: scale(1.05);
+        }
+
+        .lookbook-fan-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            z-index: 5;
+            transition: all 0.5s ease;
+            transform-origin: left center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .lookbook-fan-cover canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .lookbook-fan-page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+            transform-origin: left center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .lookbook-fan-page-1 { z-index: 4; }
+        .lookbook-fan-page-2 { z-index: 3; }
+        .lookbook-fan-page-3 { z-index: 2; }
+
+        .lookbook-preview:hover .lookbook-fan-cover {
+            transform: rotateY(-35deg);
+        }
+
+        .lookbook-preview:hover .lookbook-fan-page-1 {
+            transform: rotateY(-20deg);
+        }
+
+        .lookbook-preview:hover .lookbook-fan-page-2 {
+            transform: rotateY(-10deg);
+        }
+
+        .lookbook-preview:hover .lookbook-fan-page-3 {
+            transform: rotateY(-5deg);
+        }
+
+        .lookbook-instruction {
+            text-align: center;
+            color: rgba(0, 0, 0, 0.6);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* BOOK VIEWER */
+        .lookbook-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2c2c2c;
+            z-index: 100001;
+        }
+
+        .lookbook-viewer.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lookbook-viewer-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .lookbook-viewer-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .lookbook-close-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .lookbook-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .lookbook-viewer-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .lookbook-spread {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 2000px;
+        }
+
+        .lookbook-spread.loaded {
+            opacity: 1;
+        }
+
+        .lookbook-container {
+            position: relative;
+            display: flex;
+            gap: 0;
+            height: 80vh;
+            max-height: 800px;
+            transition: all 0.4s ease;
+        }
+
+        .lookbook-container.fade-in {
+            animation: bookFadeIn 0.4s ease;
+        }
+
+        @keyframes bookFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .lookbook-page {
+            background: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .lookbook-page.single-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lookbook-page.portrait-page {
+            aspect-ratio: 210 / 297;
+            max-height: 80vh;
+        }
+
+        .lookbook-page.content-page {
+            aspect-ratio: 297 / 210;
+            max-width: 90vw;
+        }
+
+        .lookbook-page canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .lookbook-page.flipping {
+            animation: flipPage 1.5s ease forwards;
+        }
+
+        @keyframes flipPage {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(-90deg); opacity: 0.8; }
+            100% { transform: rotateY(-180deg); opacity: 0; }
+        }
+
+        .lookbook-container.cover-mode {
+            justify-content: flex-start;
+        }
+
+        .lookbook-container.cover-mode.flipping-next .lookbook-page {
+            animation: flipCover 1.2s ease forwards;
+        }
+
+        @keyframes flipCover {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(-180deg); }
+        }
+
+        .lookbook-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+        }
+
+        .lookbook-nav-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .lookbook-nav-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .lookbook-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .lookbook-page-indicator {
+            color: white;
+            font-size: 0.9rem;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 10001;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu-btn span {
+            width: 24px;
+            height: 2px;
+            background: rgba(0, 0, 0, 0.8);
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .project-container {
+                grid-template-columns: 220px minmax(auto, 1000px);
+                gap: 3rem;
+            }
+
+            .project-nav {
+                padding: 1.5rem 1rem;
+            }
+
+            .project-nav h2 {
+                font-size: 1.5rem;
+            }
+
+            .project-content h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-image-item {
+                width: 80vw;
+            }
+
+            .project-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-detail-modal-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ppt-container {
+                grid-template-columns: 1fr;
+            }
+
+            .ppt-narration {
+                max-height: 300px;
+            }
+
+            .iff-photo-item {
+                width: 600px;
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Show mobile menu button */
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            /* Hide scrollbar on mobile for cleaner look */
+            .gallery-container::-webkit-scrollbar,
+            .tab-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .gallery-container,
+            .tab-nav {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            /* Hide top navigation on mobile */
+            nav {
+                padding: 0.8rem 1rem;
+                gap: 0.8rem;
+                border-radius: 0;
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 0.75rem;
+                letter-spacing: 0.5px;
+            }
+
+            /* Mobile sidebar */
+            .project-nav {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: white;
+                z-index: 9999;
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+                padding: 5rem 2rem 2rem;
+            }
+
+            .project-nav.active {
+                left: 0;
+            }
+
+            /* Single column layout */
+            .project-container {
+                grid-template-columns: 1fr;
+                gap: 0;
+                padding: 0;
+            }
+
+            .project-page {
+                padding: 1rem 5%;
+                padding-bottom: 5rem;
+            }
+
+            .project-content {
+                padding-top: 1rem;
+            }
+
+            .project-content h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .project-content h3 {
+                font-size: 1.2rem;
+                margin-top: 1.5rem;
+            }
+
+            .project-content p {
+                font-size: 0.85rem;
+                line-height: 1.7;
+            }
+
+            /* Gallery */
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .gallery-container {
+                height: auto;
+                max-height: 70vh;
+                padding: 1rem;
+            }
+
+            .tab-nav {
+                overflow-x: scroll;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-nav-item {
+                padding: 1rem 1.5rem;
+                font-size: 0.75rem;
+            }
+
+            /* Modal adjustments */
+            .modal-image-item {
+                width: 90vw;
+            }
+
+            .modal-description {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .modal-description h3 {
+                font-size: 1rem;
+            }
+
+            .modal-description p {
+                font-size: 0.85rem;
+            }
+
+            /* Project details */
+            .project-detail-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .project-detail-modal-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .project-detail-modal-images {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            /* IFF photos */
+            .iff-photo-item {
+                width: 90vw;
+            }
+
+            /* Team grid */
+            .team-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            /* PPT section */
+            .ppt-container {
+                grid-template-columns: 1fr;
+            }
+
+            .ppt-viewer {
+                height: 400px;
+            }
+
+            .ppt-narration {
+                padding: 1.5rem;
+                max-height: 250px;
+            }
+
+            /* Video grid */
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Look book */
+            .lookbook-preview {
+                width: 150px;
+                height: 210px;
+            }
+
+            .lookbook-controls {
+                padding: 0.8rem 1.5rem;
+                gap: 1rem;
+            }
+
+            .lookbook-nav-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
+            .lookbook-page-indicator {
+                font-size: 0.8rem;
+                min-width: 80px;
+            }
+
+            /* Description area */
+            .description-area {
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+            }
+
+            .description-area h4 {
+                font-size: 1rem;
+            }
+
+            /* Achievement section */
+            .achievement-section {
+                margin: 2rem auto;
+            }
+
+            .achievement-item {
+                margin-bottom: 2rem;
+            }
+
+            /* Process section */
+            .process-section h3 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Version indicator */
+        .version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html#home">HOME</a>
+        <a href="index.html#main">MAIN</a>
+        <a href="about.html">ABOUT</a>
+        <a href="project.html">PROJECT</a>
+    </nav>
+
+    <!-- Project Page -->
+    <section class="project-page">
+        <div class="project-container">
+            <!-- Left Navigation -->
+            <div class="project-nav">
+                <h2>CONTENT</h2>
+                <ul>
+                    <li><a href="#ma-rca" class="category">MA RCA PROJECT</a></li>
+                    <li><a href="#winter-community" class="indent">FOR WINTER COMMUNITY</a></li>
+                    <li><a href="#cordwainer" class="indent">CORDWAINER AWARDS SHOES PROJECT</a></li>
+                    
+                    <li><a href="#ba-lcf" class="category">BA LCF PROJECT</a></li>
+                    <li><a href="#final-year" class="indent">01.FINAL YEAR</a></li>
+                    <li><a href="#year2" class="indent">02.YEAR 2</a></li>
+                    
+                    <li><a href="#iff-rca" class="category">IFF x RCA</a></li>
+                    
+                    <li><a href="#grand-challenge" class="category">GRAND CHALLENGE</a></li>
+                </ul>
+            </div>
+
+            <!-- Right Content -->
+            <div class="project-content">
+                <!-- MA RCA PROJECT -->
+                <h1 id="ma-rca" style="margin-bottom: 0.15rem;">MA RCA PROJECT <span style="font-size: 1rem; font-weight: 500;">2024-2025</span></h1>
+                <p class="subtitle" style="margin-top: 0;">(CONCEPT & INNOVATION FOR WINTER SPORTS)</p>
+
+                <div class="description-area">
+                    <h4>Project Overview</h4>
+                    <p>My collection of three bodypieces explores transformable winter gear, inspired by my own journeys as a traveler and athlete. Each design is built from a "customer first" mindset—stripped to essentials, then reimagined as multifunctional systems that adapt to shifting needs. Focused on mobility, lightness and practicality, the bodypieces reduce excess while offering freedom. Through details, trims and fabrics, they act as tools of transformation, proposing sustainable solutions for real lives: less burden, more possibility. Multifunctionality discourages overconsumption, while modularity ensures repairability and longevity—designing not just for today, but for a more responsible future.</p>
+                </div>
+
+                <!-- FOR WINTER COMMUNITY -->
+                <h3 id="winter-community">FOR WINTER COMMUNITY</h3>
+                
+                <div class="project-viewer">
+                    <div class="tab-nav">
+                        <button class="tab-nav-item active" data-section="portfolio" onclick="scrollToSection('mainGallery', 'portfolio', 0)">PORTFOLIO</button>
+                        <button class="tab-nav-item" data-section="base-protect" onclick="scrollToSection('mainGallery', 'base-protect', 6)">01. BASE + PROTECT LAYER</button>
+                        <button class="tab-nav-item" data-section="transform" onclick="scrollToSection('mainGallery', 'transform', 11)">02. TRANSFORM INFLAT JACKET</button>
+                        <button class="tab-nav-item" data-section="gaiter" onclick="scrollToSection('mainGallery', 'gaiter', 15)">03. DOUBLE FORMATION GAITER</button>
+                    </div>
+
+                    <div class="gallery-container" id="mainGallery">
+                        <div class="gallery-grid" id="mainGalleryGrid">
+                            <!-- JavaScript will populate this -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Process Videos -->
+                <div class="process-section">
+                    <h3>DEVELOPMENT PROCESS</h3>
+                    <div class="video-grid">
+                        <div class="video-container">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/process-1.MP4" type="video/mp4">
+                            </video>
+                            <div class="video-caption" style="text-align: left; padding: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; color: rgba(0, 0, 0, 0.85);">Body Movement Mapping</div>
+                                <div style="font-size: 0.8rem; color: rgba(0, 0, 0, 0.6); line-height: 1.6;">Studying skiing motion to identify impact-prone zones.</div>
+                            </div>
+                        </div>
+                        <div class="video-container">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/process-2.MP4" type="video/mp4">
+                            </video>
+                            <div class="video-caption" style="text-align: left; padding: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; color: rgba(0, 0, 0, 0.85);">Prototype Impact Test</div>
+                                <div style="font-size: 0.8rem; color: rgba(0, 0, 0, 0.6); line-height: 1.6;">The final sample was tested for its real impact absorption.</div>
+                            </div>
+                        </div>
+                        <div class="video-container">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/process-3.MP4" type="video/mp4">
+                            </video>
+                            <div class="video-caption" style="text-align: left; padding: 1rem;">
+                                <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; color: rgba(0, 0, 0, 0.85);">Thickness Testing</div>
+                                <div style="font-size: 0.8rem; color: rgba(0, 0, 0, 0.6); line-height: 1.6;">Using materials to create samples of different thicknesses.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Detail Cards -->
+                <div class="project-detail-section">
+                    <div class="project-detail-grid">
+                        <div class="project-detail-card" onclick="openProjectDetailModal('base-protect')">
+                            <div class="project-detail-image">
+                                <img src="assets/images/projects/ma-rca/base-layer/cover.jpg" alt="Base + Protect Layer">
+                            </div>
+                            <div class="project-detail-caption">
+                                <div class="project-detail-title">01. BASE + PROTECT LAYER</div>
+                            </div>
+                        </div>
+
+                        <div class="project-detail-card" onclick="openProjectDetailModal('transform')">
+                            <div class="project-detail-image">
+                                <img src="assets/images/projects/ma-rca/transform/cover.jpg" alt="Transform Inflat Jacket">
+                            </div>
+                            <div class="project-detail-caption">
+                                <div class="project-detail-title">02. TRANSFORM INFLAT JACKET</div>
+                            </div>
+                        </div>
+
+                        <div class="project-detail-card" onclick="openProjectDetailModal('gaiter')">
+                            <div class="project-detail-image">
+                                <img src="assets/images/projects/ma-rca/gaiter/cover.jpg" alt="Double Formation Gaiter">
+                            </div>
+                            <div class="project-detail-caption">
+                                <div class="project-detail-title">03. DOUBLE FORMATION GAITER</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievement Section -->
+                <h3 style="text-align: center; font-weight: 400; letter-spacing: 2px; margin-top: 3rem; margin-bottom: 2rem;">ACHIEVEMENTS</h3>
+                <div class="achievement-section">
+                    <div class="achievement-item">
+                        <div class="achievement-title"><a href="https://cordwainers.org/footwear/cordwainers-footwear-awards/award-winners-2025/" target="_blank" style="color: inherit; text-decoration: none;">Cordwainers Footwear Awards 2025</a></div>
+                        <div class="achievement-desc">The Stuart Weitzman Award for Best MA (Finalist) - £1500</div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="achievement-title"><a href="https://i-d.co/article/royal-college-of-art-london-ma-fashion-2025/" target="_blank" style="color: inherit; text-decoration: none;">i-D FASHION</a></div>
+                        <div class="achievement-desc">Featured by i-D in RCA MA Fashion Class</div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="achievement-title">Shima Seiki Student Design Competition (2025)</div>
+                        <div class="achievement-desc">Digital Knit Design Project (Commendation)</div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="achievement-title"><a href="https://www.britishfashioncouncil.co.uk/GraduatePreview/graduate_preview.aspx" target="_blank" style="color: inherit; text-decoration: none;">British Fashion Council</a></div>
+                        <div class="achievement-desc">Featured by BFC as part of Graduate Preview</div>
+                    </div>
+                </div>
+
+                <!-- CORDWAINER AWARDS SHOES PROJECT -->
+                <h3 id="cordwainer">CORDWAINER AWARDS SHOES PROJECT</h3>
+
+                <div class="description-area">
+                    <h4>Project Overview</h4>
+                    <p>This project explores a new approach to winter footwear through a system of three adaptive shoe designs developed for the winter community. Each concept responds to the challenges of moving through cold environments, transitioning between indoor and outdoor spaces, and reducing the need to carry multiple pairs of shoes.</p>
+                </div>
+
+                <!-- CORDWAINER PORTFOLIO GALLERY -->
+                <div class="project-viewer">
+                    <div class="tab-nav">
+                        <button class="tab-nav-item active" data-section="cordwainer-portfolio" onclick="scrollToSection('cordwainerGallery', 'cordwainer-portfolio', 0)">PORTFOLIO</button>
+                    </div>
+
+                    <div class="gallery-container" id="cordwainerGallery">
+                        <div class="gallery-grid" id="cordwainerGalleryGrid">
+                            <!-- JavaScript will populate this -->
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="text-align: center; font-weight: 400; letter-spacing: 2px; margin-top: 3rem; margin-bottom: 2rem;">ACHIEVEMENTS</h3>
+                <div class="achievement-section">
+                    <div class="achievement-item">
+                        <div class="achievement-title"><a href="https://cordwainers.org/footwear/cordwainers-footwear-awards/award-winners-2025/" target="_blank" style="color: inherit; text-decoration: none;">Cordwainers Footwear Awards 2025</a></div>
+                        <div class="achievement-desc">The Stuart Weitzman Award for Best MA (Finalist) - £1500</div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="achievement-title">The Cordwainer</div>
+                        <div class="achievement-desc">Published in Summer Edition of The Cordwainer</div>
+                    </div>
+                </div>
+
+                <!-- BA LCF PROJECT -->
+                <h1 id="ba-lcf" style="margin-top: 4rem;">BA LCF PROJECT <span style="font-size: 1rem; font-weight: 500;">2020-2023</span></h1>
+
+                <!-- 01. FINAL YEAR -->
+                <h3 id="final-year">01. FINAL YEAR</h3>
+                
+                <p>Final year project exploring advanced garment construction, material innovation, and sustainable design practices. This comprehensive collection demonstrates technical proficiency and creative vision developed throughout the undergraduate program.</p>
+
+                <!-- LOOK BOOK SECTION -->
+                <div class="lookbook-section">
+                    <div class="lookbook-instruction">Click to view LOOK BOOK</div>
+                    <div class="lookbook-preview" onclick="openLookBook()">
+                        <div class="lookbook-fan-cover" id="lookbookFanCover">
+                            <canvas id="lookbookCoverCanvas"></canvas>
+                        </div>
+                        <div class="lookbook-fan-page lookbook-fan-page-1"></div>
+                        <div class="lookbook-fan-page lookbook-fan-page-2"></div>
+                        <div class="lookbook-fan-page lookbook-fan-page-3"></div>
+                    </div>
+                </div>
+
+                <div class="project-viewer">
+                    <div class="tab-nav">
+                        <button class="tab-nav-item active" data-section="final-portfolio" onclick="scrollToSection('finalYearGallery', 'final-portfolio', 0)">PORTFOLIO</button>
+                    </div>
+
+                    <div class="gallery-container" id="finalYearGallery">
+                        <div class="gallery-grid" id="finalYearGalleryGrid">
+                            <!-- JavaScript will populate this -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 02. YEAR 2 PROJECT -->
+                <h3 id="year2">02. YEAR 2 PROJECT</h3>
+                
+                <p>Second year explorations in garment construction and material innovation.</p>
+
+                <div class="project-viewer">
+                    <div class="tab-nav">
+                        <button class="tab-nav-item active" data-section="year2-portfolio" onclick="scrollToSection('year2Gallery', 'year2-portfolio', 0)">PORTFOLIO</button>
+                    </div>
+
+                    <div class="gallery-container" id="year2Gallery">
+                        <div class="gallery-grid year2-grid" id="year2GalleryGrid">
+                            <!-- JavaScript will populate this -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IFF x RCA PROJECT -->
+                <h1 id="iff-rca" style="margin-top: 4rem; margin-bottom: 0.15rem;">IFF x RCA PROJECT <span style="font-size: 1rem; font-weight: 500;">2024</span></h1>
+                <h4 style="margin-top: 0;">(SCENT & NARRATIVE DESIGN COLLABORATION)</h4>
+
+                <div class="team-section">
+                    <div class="team-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="team-member">
+                            <div class="team-role">Perfumer</div>
+                            <div class="team-name"><a href="https://www.instagram.com/tonyyeperfumer" target="_blank">Tony Ye</a></div>
+                            <div class="team-org">International Flavors & Fragrances Inc. (IFF)</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-role">Fashion Designer</div>
+                            <div class="team-name">Grace Fu</div>
+                            <div class="team-org">Royal College of Art</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-role">Tutor</div>
+                            <div class="team-name"><a href="https://www.instagram.com/thefeelies" target="_blank">Grace Boyle</a></div>
+                            <div class="team-org">Royal College of Art</div>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-role">Tutor</div>
+                            <div class="team-name">Susan Irvine</div>
+                            <div class="team-org">Royal College of Art</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="description-area">
+                    <h4>Project Description</h4>
+                    <p>This collaboration between Royal College of Art and IFF explores the intersection of fashion design and olfactory science through immersive experiences.</p>
+                </div>
+
+                <!-- PPT Presentation Section - TEMPORARILY HIDDEN -->
+                <!-- 暂时隐藏 - To be added later 稍后添加 -->
+                <div class="ppt-presentation-section" style="display: none;">
+                    <h3>PROJECT PRESENTATION</h3>
+                    
+                    <div class="ppt-container">
+                        <div class="ppt-viewer-wrapper">
+                            <iframe class="ppt-viewer" 
+                                    src="presentations/iff-rca/index.html" 
+                                    frameborder="0" 
+                                    allowfullscreen="true" 
+                                    mozallowfullscreen="true" 
+                                    webkitallowfullscreen="true">
+                            </iframe>
+                        </div>
+
+                        <div class="ppt-narration">
+                            <h4>NARRATION</h4>
+                            <div id="narrationContent" class="ppt-narration-text narration-typewriter">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INSTALLATION VIDEO - UPDATED TO HORIZONTAL 16:9 -->
+                <div class="process-section">
+                    <h3>INSTALLATION VIDEO</h3>
+                    <div class="video-grid">
+                        <div class="video-container video-container-horizontal">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/iff-1.MP4" type="video/mp4">
+                            </video>
+                            <div class="video-caption">SUKUBABU</div>
+                        </div>
+                        <div class="video-container video-container-horizontal">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/iff-2.MP4" type="video/mp4">
+                            </video>
+                            <div class="video-caption">RIMOKAI</div>
+                        </div>
+                        <div class="video-container video-container-horizontal">
+                            <video autoplay muted loop playsinline>
+                                <source src="assets/videos/iff-3.MP4" type="video/mp4">
+                            </video>
+                            <div class="video-caption">DEJIPURE</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mixed-reality-section">
+                    <h3>MIXED REALITY PROTOTYPE</h3>
+                    
+                    <div class="mixed-reality-video">
+                        <video controls>
+                            <source src="assets/videos/mixed-reality.MP4" type="video/mp4">
+                        </video>
+                    </div>
+
+                    <div class="mixed-reality-info">
+                        <div class="mixed-reality-credit">
+                            Credit by: 3D collaborator - Jin (RCA Digital direction)
+                        </div>
+                        <div class="mixed-reality-description">
+                            <p>We created an immersive 3D world where digital emotions can be felt through cross-modal translation. This prototype demonstrates how sight, sound, and texture can simulate the emotional depth usually triggered by scent.</p>
+                            <p><strong>VISION | SOUND | COLOR</strong></p>
+                            <p>(3 Elements influence your emotions in the digital world)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="iff-photo-gallery">
+                    <h3>PROJECT MOMENTS</h3>
+                    <div class="iff-photo-scroll" id="iffPhotoScroll">
+                        <!-- JavaScript will populate this -->
+                    </div>
+                    <div class="iff-photo-caption">Competition presentation moments</div>
+                </div>
+
+                <h3 style="text-align: center; font-weight: 400; letter-spacing: 2px; margin-top: 3rem; margin-bottom: 2rem;">ACHIEVEMENTS</h3>
+                <div class="achievement-section">
+                    <div class="achievement-item">
+                        <div class="achievement-title"><a href="https://www.lopinion.fr/o2-week-end/quel-sera-le-parfum-du-futur-selon-la-gen-z" target="_blank" style="color: inherit; text-decoration: none;">O2 Weekend Feature</a></div>
+                        <div class="achievement-desc">RCA x IFF Collaboration Project Coverage (Shortlisted)</div>
+                    </div>
+                </div>
+
+                <!-- GRAND CHALLENGE -->
+                <h1 id="grand-challenge" style="margin-top: 4rem; margin-bottom: 0.15rem;">GRAND CHALLENGE <span style="font-size: 1rem; font-weight: 500;">2024</span></h1>
+                <h4 style="margin-top: 0;">(MULTI-DISCIPLINARY COLLABORATION)</h4>
+
+                <div class="description-area">
+                    <h4>Project Overview</h4>
+                    <p>Multi-disciplinary project addressing global challenges through innovative design thinking.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UNIVERSAL IMAGE MODAL -->
+    <div id="imageModal" class="image-modal">
+        <button class="modal-close" onclick="closeImageModal()">&times;</button>
+        
+        <div class="modal-content" id="modalContent">
+            <div class="modal-image-container" id="modalImageContainer">
+            </div>
+        </div>
+
+        <div class="modal-description" id="modalDescription">
+            <h3 id="descriptionTitle">PORTFOLIO</h3>
+            <p id="descriptionText">Comprehensive documentation of the design development process.</p>
+        </div>
+
+        <button class="modal-nav-arrow modal-nav-prev" onclick="scrollModalImages(-1)">‹</button>
+        <button class="modal-nav-arrow modal-nav-next" onclick="scrollModalImages(1)">›</button>
+    </div>
+
+    <!-- PROJECT DETAIL MODAL -->
+    <div id="projectDetailModal" class="project-detail-modal">
+        <div class="project-detail-modal-content">
+            <button class="project-detail-modal-close" onclick="closeProjectDetailModal()">&times;</button>
+            
+            <div class="project-detail-modal-header">
+                <h2 class="project-detail-modal-title" id="projectDetailTitle">BASE LAYER PROJECT</h2>
+            </div>
+
+            <div class="project-detail-modal-images" id="projectDetailImages">
+            </div>
+
+            <div class="project-detail-modal-section">
+                <h4>Description</h4>
+                <p id="projectDetailDescription">Project description will appear here.</p>
+            </div>
+
+            <div class="project-detail-modal-section">
+                <h4>Technique</h4>
+                <ul id="projectDetailTechnology">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOOK BOOK VIEWER -->
+    <div id="lookbookViewer" class="lookbook-viewer">
+        <div class="lookbook-viewer-header">
+            <div class="lookbook-viewer-title">LOOK BOOK</div>
+            <button class="lookbook-close-btn" onclick="closeLookBook()">&times;</button>
+        </div>
+
+        <div class="lookbook-viewer-content">
+            <div class="lookbook-spread loaded" id="lookbookSpread">
+                <div class="lookbook-container" id="lookbookContainer">
+                </div>
+            </div>
+
+            <div class="lookbook-controls">
+                <button class="lookbook-nav-btn" id="prevBtn" onclick="previousSpread()">‹</button>
+                <div class="lookbook-page-indicator" id="pageIndicator">Cover</div>
+                <button class="lookbook-nav-btn" id="nextBtn" onclick="nextSpread()">›</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Version Indicator -->
+    <div class="version">v3.19</div>
+
+    <script>
+        // ========== GALLERY DATA INITIALIZATION ==========
+        const galleryData = {
+            main: [],
+            finalYear: [],
+            year2: [],
+            cordwainer: []
+        };
+
+        // Populate MA RCA Main Gallery (20 images)
+        const mainGalleryGrid = document.getElementById('mainGalleryGrid');
+        for (let i = 1; i <= 20; i++) {
+            const pageNum = i.toString().padStart(2, '0');
+            const section = i <= 5 ? 'portfolio' : i <= 10 ? 'base-protect' : i <= 14 ? 'transform' : 'gaiter';
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.setAttribute('data-index', i - 1);
+            item.setAttribute('data-section', section);
+            item.setAttribute('data-gallery', 'main');
+            item.onclick = () => openImageModal('main', i - 1);
+            item.innerHTML = `
+                <img src="assets/images/projects/ma-rca/portfolio/${pageNum}.jpg" alt="Page ${pageNum}">
+                <div class="gallery-item-number">${pageNum}</div>
+            `;
+            mainGalleryGrid.appendChild(item);
+            
+            galleryData.main.push({
+                index: i - 1,
+                src: `assets/images/projects/ma-rca/portfolio/${pageNum}.jpg`,
+                section: section
+            });
+        }
+
+        // Populate Cordwainer Gallery (12 images)
+        const cordwainerGalleryGrid = document.getElementById('cordwainerGalleryGrid');
+        for (let i = 1; i <= 12; i++) {
+            const pageNum = i.toString().padStart(2, '0');
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.setAttribute('data-index', i - 1);
+            item.setAttribute('data-section', 'cordwainer-portfolio');
+            item.setAttribute('data-gallery', 'cordwainer');
+            item.onclick = () => openImageModal('cordwainer', i - 1);
+            item.innerHTML = `
+                <img src="assets/images/projects/shoes/page-${pageNum}.jpg" alt="Cordwainer ${pageNum}">
+                <div class="gallery-item-number">${pageNum}</div>
+            `;
+            cordwainerGalleryGrid.appendChild(item);
+            
+            galleryData.cordwainer.push({
+                index: i - 1,
+                src: `assets/images/projects/shoes/page-${pageNum}.jpg`,
+                section: 'cordwainer-portfolio'
+            });
+        }
+
+        // Populate Final Year Gallery (13 images)
+        const finalYearGalleryGrid = document.getElementById('finalYearGalleryGrid');
+        for (let i = 1; i <= 13; i++) {
+            const pageNum = i.toString().padStart(2, '0');
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.setAttribute('data-index', i - 1);
+            item.setAttribute('data-section', 'final-portfolio');
+            item.setAttribute('data-gallery', 'finalYear');
+            item.onclick = () => openImageModal('finalYear', i - 1);
+            item.innerHTML = `
+                <img src="assets/images/projects/ba-lcf/final-year/page-${pageNum}.jpg" alt="Final Year ${pageNum}">
+                <div class="gallery-item-number">${pageNum}</div>
+            `;
+            finalYearGalleryGrid.appendChild(item);
+            
+            galleryData.finalYear.push({
+                index: i - 1,
+                src: `assets/images/projects/ba-lcf/final-year/page-${pageNum}.jpg`,
+                section: 'final-portfolio'
+            });
+        }
+
+        // Populate Year 2 Gallery (10 images)
+        const year2GalleryGrid = document.getElementById('year2GalleryGrid');
+        for (let i = 1; i <= 10; i++) {
+            const pageNum = i.toString().padStart(2, '0');
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.setAttribute('data-index', i - 1);
+            item.setAttribute('data-section', 'year2-portfolio');
+            item.setAttribute('data-gallery', 'year2');
+            item.onclick = () => openImageModal('year2', i - 1);
+            item.innerHTML = `
+                <img src="assets/images/projects/ba-lcf/year-2/page-${pageNum}.jpg" alt="Year 2 ${pageNum}">
+                <div class="gallery-item-number">${pageNum}</div>
+            `;
+            year2GalleryGrid.appendChild(item);
+            
+            galleryData.year2.push({
+                index: i - 1,
+                src: `assets/images/projects/ba-lcf/year-2/page-${pageNum}.jpg`,
+                section: 'year2-portfolio'
+            });
+        }
+
+        // Populate IFF Photo Gallery (4 images)
+        const iffPhotoScroll = document.getElementById('iffPhotoScroll');
+        for (let i = 1; i <= 4; i++) {
+            const pageNum = i.toString().padStart(2, '0');
+            const item = document.createElement('div');
+            item.className = 'iff-photo-item';
+            item.innerHTML = `<img src="assets/images/projects/iff-rca/photos/page-${pageNum}.jpg" alt="IFF Photo ${i}">`;
+            iffPhotoScroll.appendChild(item);
+        }
+
+        const sectionDescriptions = {
+            'portfolio': {
+                title: 'PORTFOLIO',
+                text: 'Comprehensive documentation of the design development process, from initial concept sketches to final collection. Includes technical drawings, fabric research, and construction details.'
+            },
+            'base-protect': {
+                title: '01. BASE + PROTECT LAYER',
+                text: 'Technical baselayer engineered for mobility, adaptability, and comfort. Integrates thermal regulation, sweat management, and soft-impact protection into a seamless knitted garment using advanced digital knitting technology.'
+            },
+            'transform': {
+                title: '02. TRANSFORM INFLAT JACKET',
+                text: 'Innovative inflatable jacket design that adapts to changing weather conditions. Features transformable structure and advanced insulation technology for optimal thermal regulation.'
+            },
+            'gaiter': {
+                title: '03. DOUBLE FORMATION GAITER',
+                text: 'Modular footwear system extending the philosophy of adaptable protection. Integrates lightweight materials with strategic reinforcement zones for varied snow sports environments.'
+            },
+            'final-portfolio': {
+                title: 'FINAL YEAR PORTFOLIO',
+                text: 'Complete undergraduate collection showcasing technical proficiency and creative vision.'
+            },
+            'year2-portfolio': {
+                title: 'YEAR 2 PORTFOLIO',
+                text: 'Second year project exploring foundational garment construction and design principles.'
+            },
+            'cordwainer-portfolio': {
+                title: 'CORDWAINER PORTFOLIO',
+                text: 'Award-winning footwear design project exploring winter sports innovation and adaptive design systems.'
+            }
+        };
+
+        let currentGallery = '';
+
+        // ========== MOBILE MENU ==========
+        function toggleMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const nav = document.querySelector('.project-nav');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            btn.classList.toggle('active');
+            nav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            if (nav.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function closeMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const nav = document.querySelector('.project-nav');
+            const overlay = document.getElementById('mobileOverlay');
+            
+            btn.classList.remove('active');
+            nav.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close mobile menu when clicking nav links
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.project-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        closeMobileMenu();
+                    }
+                });
+            });
+
+            showNarration(1);
+        });
+
+        // ========== LOOK BOOK SYSTEM ==========
+        const pdfUrl = 'assets/pdfs/lookbook.pdf';
+        let pdfDoc = null;
+        let totalPages = 0;
+        let currentSpread = 0;
+        const pageCache = {};
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        async function loadPDF() {
+            try {
+                const loadingTask = pdfjsLib.getDocument(pdfUrl);
+                pdfDoc = await loadingTask.promise;
+                totalPages = pdfDoc.numPages;
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    await cachePageRendering(i);
+                }
+                
+                await renderFanCover();
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+            }
+        }
+
+        async function cachePageRendering(pageNum) {
+            if (pageCache[pageNum]) return;
+            
+            try {
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 2 });
+                
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                
+                pageCache[pageNum] = canvas;
+            } catch (error) {
+                console.error(`Error caching page ${pageNum}:`, error);
+            }
+        }
+
+        async function renderPage(pageNum, targetCanvas) {
+            if (!pageCache[pageNum]) {
+                await cachePageRendering(pageNum);
+            }
+            
+            const cachedCanvas = pageCache[pageNum];
+            if (cachedCanvas) {
+                targetCanvas.width = cachedCanvas.width;
+                targetCanvas.height = cachedCanvas.height;
+                const context = targetCanvas.getContext('2d');
+                context.drawImage(cachedCanvas, 0, 0);
+            }
+        }
+
+        async function renderFanCover() {
+            const canvas = document.getElementById('lookbookCoverCanvas');
+            if (canvas && pageCache[1]) {
+                await renderPage(1, canvas);
+            }
+        }
+
+        async function openLookBook() {
+            if (!pdfDoc) {
+                alert('PDF is still loading, please wait...');
+                return;
+            }
+
+            document.getElementById('lookbookViewer').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            currentSpread = 0;
+            await renderSpread('fade');
+        }
+
+        function closeLookBook() {
+            document.getElementById('lookbookViewer').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        async function renderSpread(direction = 'fade') {
+            const container = document.getElementById('lookbookContainer');
+            const bookSpread = document.getElementById('lookbookSpread');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+
+            if (direction === 'next') {
+                if (currentSpread === 0) {
+                    bookSpread.classList.remove('loaded');
+                    container.classList.add('cover-mode', 'flipping-next');
+                    await new Promise(resolve => setTimeout(resolve, 1200));
+                    container.classList.remove('cover-mode', 'flipping-next');
+                } else if (currentSpread > 0 && currentSpread < 14) {
+                    const currentPage = container.querySelector('.lookbook-page');
+                    if (currentPage) {
+                        bookSpread.classList.remove('loaded');
+                        currentPage.classList.add('flipping');
+                        await new Promise(resolve => setTimeout(resolve, 1500));
+                    }
+                }
+            }
+
+            container.innerHTML = '';
+            container.className = 'lookbook-container';
+
+            if (currentSpread === 0 || currentSpread === 14) {
+                bookSpread.classList.add('cover-page');
+            } else {
+                bookSpread.classList.remove('cover-page');
+            }
+
+            if (currentSpread === 0) {
+                container.classList.add('cover-mode');
+                const coverPage = document.createElement('div');
+                coverPage.className = 'lookbook-page single-page portrait-page';
+                const canvas = document.createElement('canvas');
+                canvas.id = 'coverCanvas';
+                coverPage.appendChild(canvas);
+                container.appendChild(coverPage);
+                await renderPage(1, canvas);
+            }
+            else if (currentSpread >= 1 && currentSpread <= 13) {
+                const pageNum = currentSpread + 1;
+                const singlePage = document.createElement('div');
+                singlePage.className = 'lookbook-page single-page content-page';
+                singlePage.style.cssText = 'transform-origin: left center;';
+                const canvas = document.createElement('canvas');
+                canvas.id = 'contentCanvas';
+                singlePage.appendChild(canvas);
+                container.appendChild(singlePage);
+                await renderPage(pageNum, canvas);
+            }
+            else if (currentSpread === 14) {
+                const backPage = document.createElement('div');
+                backPage.className = 'lookbook-page single-page portrait-page';
+                const canvas = document.createElement('canvas');
+                canvas.id = 'backCanvas';
+                backPage.appendChild(canvas);
+                container.appendChild(backPage);
+                await renderPage(15, canvas);
+            }
+            
+            container.classList.add('fade-in');
+            bookSpread.classList.add('loaded');
+            
+            setTimeout(() => {
+                container.classList.remove('fade-in');
+            }, 400);
+
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const indicator = document.getElementById('pageIndicator');
+            const totalSpreads = 15;
+
+            prevBtn.disabled = currentSpread === 0;
+            nextBtn.disabled = currentSpread === totalSpreads - 1;
+
+            if (currentSpread === 0) {
+                indicator.textContent = 'Cover';
+            } else if (currentSpread === 14) {
+                indicator.textContent = 'Back Cover';
+            } else {
+                const pageNum = currentSpread + 1;
+                indicator.textContent = `Page ${pageNum} of ${totalPages}`;
+            }
+        }
+
+        async function nextSpread() {
+            const totalSpreads = 15;
+            if (currentSpread < totalSpreads - 1) {
+                currentSpread++;
+                await renderSpread('next');
+            }
+        }
+
+        async function previousSpread() {
+            if (currentSpread > 0) {
+                currentSpread--;
+                await renderSpread('prev');
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            const viewer = document.getElementById('lookbookViewer');
+            if (viewer.classList.contains('active')) {
+                if (e.key === 'ArrowRight') {
+                    nextSpread();
+                } else if (e.key === 'ArrowLeft') {
+                    previousSpread();
+                } else if (e.key === 'Escape') {
+                    closeLookBook();
+                }
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            loadPDF();
+        });
+
+        // ========== GALLERY SYSTEM ==========
+        function scrollToSection(galleryId, section, startIndex) {
+            const gallery = document.getElementById(galleryId);
+            const targetItem = gallery.querySelector(`[data-index="${startIndex}"]`);
+            
+            const parentViewer = gallery.closest('.project-viewer');
+            parentViewer.querySelectorAll('.tab-nav-item').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            parentViewer.querySelector(`[data-section="${section}"]`).classList.add('active');
+            
+            if (targetItem && gallery) {
+                const itemTop = targetItem.offsetTop;
+                gallery.scrollTo({
+                    top: itemTop - 32,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function openImageModal(gallery, index) {
+            currentGallery = gallery;
+            const modal = document.getElementById('imageModal');
+            const modalImageContainer = document.getElementById('modalImageContainer');
+            
+            modalImageContainer.innerHTML = '';
+            
+            const images = galleryData[gallery];
+            
+            images.forEach((img, i) => {
+                const imageItem = document.createElement('div');
+                imageItem.className = 'modal-image-item';
+                imageItem.setAttribute('data-index', i);
+                imageItem.setAttribute('data-section', img.section);
+                imageItem.innerHTML = `<img src="${img.src}" alt="Page ${i + 1}">`;
+                modalImageContainer.appendChild(imageItem);
+            });
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                scrollToModalImage(index);
+                updateDescription(gallery, index);
+            }, 100);
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.addEventListener('scroll', () => handleModalScroll(gallery));
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            const modalContent = document.getElementById('modalContent');
+            modalContent.removeEventListener('scroll', handleModalScroll);
+            currentGallery = '';
+        }
+
+        function scrollToModalImage(index) {
+            const modalContent = document.getElementById('modalContent');
+            const targetImage = modalContent.querySelector(`[data-index="${index}"]`);
+            
+            if (targetImage) {
+                const scrollAmount = targetImage.offsetLeft - (window.innerWidth / 2) + (targetImage.offsetWidth / 2);
+                modalContent.scrollTo({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        function scrollModalImages(direction) {
+            const modalContent = document.getElementById('modalContent');
+            const scrollAmount = 732;
+            modalContent.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+
+        function handleModalScroll(gallery) {
+            const modalContent = document.getElementById('modalContent');
+            const scrollLeft = modalContent.scrollLeft;
+            const imageWidth = 732;
+            const centerIndex = Math.round(scrollLeft / imageWidth);
+            
+            updateDescription(gallery, centerIndex);
+        }
+
+        function updateDescription(gallery, imageIndex) {
+            const images = galleryData[gallery];
+            const section = images[imageIndex]?.section;
+            if (section && sectionDescriptions[section]) {
+                document.getElementById('descriptionTitle').textContent = sectionDescriptions[section].title;
+                document.getElementById('descriptionText').textContent = sectionDescriptions[section].text;
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+                closeProjectDetailModal();
+            }
+        });
+
+        // ========== PROJECT DETAIL MODAL ==========
+        const projectDetailData = {
+            'base-protect': {
+                title: '01. BASE + PROTECT LAYER',
+                images: [
+                    'assets/images/projects/ma-rca/base-layer/detail-01.JPG',
+                    'assets/images/projects/ma-rca/base-layer/detail-02.JPG',
+                    'assets/images/projects/ma-rca/base-layer/detail-03.JPG',
+                    'assets/images/projects/ma-rca/base-layer/detail-04.JPG',
+                    'assets/images/projects/ma-rca/base-layer/detail-05.JPG',
+                    'assets/images/projects/ma-rca/base-layer/detail-06.JPG',
+                    'assets/images/projects/ma-rca/base-layer/detail-07.JPG'
+                ],
+                description: 'A customizable silicone-based layer engineered with variable yarns and knit structures to meet the functional needs of different body areas. It provides targeted flexibility, compression, and impact resistance, forming an adaptive protective base that merges comfort with performance.',
+                technology: [
+                    'Digital knitting (Shima Seiki)',
+                    'Industrial Dubied Knitting Machines',
+                    'Industrial Linking Machines'
+                ]
+            },
+            'transform': {
+                title: '02. TRANSFORM INFLAT JACKET',
+                images: [
+                    'assets/images/projects/ma-rca/transform/detail-01.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-02.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-03.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-04.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-05.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-06.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-07.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-08.JPG',
+                    'assets/images/projects/ma-rca/transform/detail-09.JPG'
+                ],
+                description: 'A three-form inflatable jacket that transforms between a protective outerwear, a sleeping mat, and a rest chair. The transformation is achieved through structural design combined with a self-developed trim system that enables functional reconfiguration. The inflatable layers integrated within the shell provide adjustable insulation and comfort, effectively enhancing thermal protection while maintaining lightweight versatility for outdoor and adaptive use.',
+                technology: [
+                    'CLO3D',
+                    'Aluminium CNC Milling',
+                    'High frequency welder',
+                    'Inflatable system',
+                    'Form transformation'
+                ]
+            },
+            'gaiter': {
+                title: '03. DOUBLE FORMATION GAITER',
+                images: [
+                    'assets/images/projects/ma-rca/gaiter/detail-01.JPG',
+                    'assets/images/projects/ma-rca/gaiter/detail-02.JPG',
+                    'assets/images/projects/ma-rca/gaiter/detail-03.JPG',
+                    'assets/images/projects/ma-rca/gaiter/detail-04.JPG',
+                    'assets/images/projects/ma-rca/gaiter/detail-05.JPG',
+                    'assets/images/projects/ma-rca/gaiter/detail-06.JPG',
+                    'assets/images/projects/ma-rca/gaiter/detail-07.JPG'
+                ],
+                description: 'A convertible gaiter-shoe system designed with dual functionality — transforming between a down jacket and a protective gaiter. When attached to footwear, it shields the wearer from snow and moisture after skiing, while the transformable structure allows it to unfold into an insulated down jacket for warmth during rest or transition. The gaiter device can be attached to shoes of different sizes through an adjustable connection system, adapting to various foot shapes and user needs. This design explores modular versatility and environmental adaptability within a single wearable system.',
+                technology: [
+                    'Leather molding',
+                    'Shoes making',
+                    'Binding machine',
+                    'Structural thinking',
+                    'Material and trim knowledge',
+                    'Feather filling'
+                ]
+            }
+        };
+
+        function openProjectDetailModal(projectId) {
+            const modal = document.getElementById('projectDetailModal');
+            const data = projectDetailData[projectId];
+            
+            if (!data) return;
+            
+            document.getElementById('projectDetailTitle').textContent = data.title;
+            
+            const imagesContainer = document.getElementById('projectDetailImages');
+            imagesContainer.innerHTML = '';
+            data.images.forEach(imgSrc => {
+                const imgItem = document.createElement('div');
+                imgItem.className = 'project-detail-modal-image-item';
+                imgItem.innerHTML = `<img src="${imgSrc}" alt="${data.title}">`;
+                imagesContainer.appendChild(imgItem);
+            });
+            
+            document.getElementById('projectDetailDescription').textContent = data.description;
+            
+            const techContainer = document.getElementById('projectDetailTechnology');
+            techContainer.innerHTML = '';
+            data.technology.forEach(tech => {
+                const li = document.createElement('li');
+                li.textContent = tech;
+                techContainer.appendChild(li);
+            });
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProjectDetailModal() {
+            const modal = document.getElementById('projectDetailModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ========== NAVIGATION ==========
+        const navLinks = document.querySelectorAll('.project-nav a');
+        const sections = document.querySelectorAll('.project-content h1, .project-content h2, .project-content h3');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ========== PPT NARRATION SYSTEM ==========
+        const narrationData = {
+            1: {
+                text: "Welcome to our IFF x RCA collaboration project. This innovative work explores the intersection of fashion design and olfactory science through immersive digital experiences.\n\nIFF x RCAコラボレーションプロジェクトへようこそ。この革新的な作品は、没入型デジタル体験を通じて、ファッションデザインと嗅覚科学の交差点を探求しています。"
+            },
+            2: {
+                text: "Our research began with understanding how scent influences emotion and memory. We conducted extensive studies on cross-modal translation between olfactory and visual experiences.\n\n私たちの研究は、香りが感情と記憶にどのように影響するかを理解することから始まりました。嗅覚と視覚体験の間のクロスモーダル変換に関する広範な研究を実施しました。"
+            },
+            3: {
+                text: "The design process involved creating three distinct scent narratives: SUKUBABU, RIMOKAI, and DEJIPURE. Each represents a unique emotional journey through carefully selected fragrance notes.\n\nデザインプロセスでは、SUKUBABU、RIMOKAI、DEJIPUREという3つの異なる香りのナラティブを作成しました。それぞれが、慎重に選ばれた香りのノートを通じてユニークな感情の旅を表しています。"
+            },
+            4: {
+                text: "SUKUBABU explores the freshness of morning dew and citrus notes, creating a sense of awakening and renewal. The fragrance composition balances lightness with depth.\n\nSUKUBABUは朝露と柑橘系のノートの新鮮さを探求し、目覚めと再生の感覚を生み出します。香りの構成は軽さと深さのバランスを取っています。"
+            },
+            5: {
+                text: "RIMOKAI captures distant memories through warm woody notes and subtle spices. It evokes nostalgia and comfort, connecting past experiences with present emotions.\n\nRIMOKAIは温かいウッディノートと繊細なスパイスを通じて遠い記憶を捉えます。ノスタルジアと快適さを呼び起こし、過去の経験と現在の感情を結びつけます。"
+            },
+            6: {
+                text: "DEJIPURE represents digital purity through clean, minimalist scent profiles. Sharp green notes meet ethereal florals, creating a futuristic olfactory experience.\n\nDEJIPUREは、クリーンでミニマルな香りのプロファイルを通じてデジタルな純粋さを表現します。鋭いグリーンノートが幻想的なフローラルと出会い、未来的な嗅覚体験を生み出します。"
+            },
+            7: {
+                text: "The installation design transforms physical space into a multi-sensory environment. Visitors navigate through three distinct zones, each corresponding to one scent narrative.\n\nインスタレーションデザインは物理的空間を多感覚環境に変換します。訪問者は3つの異なるゾーンを移動し、それぞれが1つの香りのナラティブに対応しています。"
+            },
+            8: {
+                text: "Our collaboration with perfumer Tony Ye brought technical expertise in scent composition. His knowledge of molecular structures informed our design decisions.\n\n調香師Tony Yeとのコラボレーションは香りの構成における技術的専門知識をもたらしました。分子構造に関する彼の知識が私たちのデザイン決定に影響を与えました。"
+            },
+            9: {
+                text: "The mixed reality prototype demonstrates how digital technology can simulate olfactory experiences. Through visual and auditory cues, we recreate emotional responses typically triggered by scent.\n\n複合現実プロトタイプは、デジタル技術が嗅覚体験をどのようにシミュレートできるかを示しています。視覚と聴覚の手がかりを通じて、通常は香りによって引き起こされる感情的反応を再現します。"
+            },
+            10: {
+                text: "Thank you for experiencing our project. We hope this exploration of scent and narrative has inspired new ways of thinking about sensory design.\n\nプロジェクトを体験していただきありがとうございます。香りとナラティブのこの探求が、感覚デザインについて考える新しい方法を触発することを願っています。"
+            }
+        };
+
+        let currentSlide = 1;
+
+        function showNarration(slideNumber) {
+            const narrationContent = document.getElementById('narrationContent');
+            const data = narrationData[slideNumber] || narrationData[1];
+            
+            narrationContent.className = 'ppt-narration-text';
+            narrationContent.classList.remove('active');
+            narrationContent.classList.add('narration-typewriter');
+            
+            applyTypewriterEffectBilingual(narrationContent, data.text);
+        }
+
+        function applyTypewriterEffectBilingual(element, text) {
+            element.innerHTML = '';
+            
+            const parts = text.split('\n\n');
+            const englishText = parts[0] || '';
+            const japaneseText = parts[1] || '';
+            
+            let html = '';
+            
+            if (englishText) {
+                const englishChars = englishText.split('');
+                html += '<div class="narration-paragraph">';
+                englishChars.forEach((char, index) => {
+                    if (char === '\n') {
+                        html += '<br>';
+                    } else {
+                        html += `<span style="animation-delay: ${index * 0.05}s">${char}</span>`;
+                    }
+                });
+                html += '</div>';
+            }
+            
+            html += '<div class="narration-spacer"></div>';
+            
+            if (japaneseText) {
+                const japaneseChars = japaneseText.split('');
+                html += '<div class="narration-paragraph">';
+                japaneseChars.forEach((char, index) => {
+                    if (char === '\n') {
+                        html += '<br>';
+                    } else {
+                        html += `<span style="animation-delay: ${index * 0.05}s">${char}</span>`;
+                    }
+                });
+                html += '</div>';
+            }
+            
+            element.innerHTML = html;
+            setTimeout(() => {
+                element.classList.add('active');
+            }, 100);
+        }
+
+        function changeSlide(slideNumber) {
+            currentSlide = slideNumber;
+            showNarration(slideNumber);
+        }
+    </script>
+</body>
+</html>

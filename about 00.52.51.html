@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKINA TSUTSUMI | About v3.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: rgba(0, 0, 0, 0.85);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            right: 0;
+            padding: 1rem 1.5rem;
+            z-index: 9999;
+            display: flex;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 0 0 0 15px;
+        }
+
+        nav a {
+            color: rgba(0, 0, 0, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+            font-weight: 600;
+        }
+
+        nav a:hover {
+            opacity: 0.5;
+        }
+
+        /* About Page */
+        .about-page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 5rem 5%;
+            background: white;
+        }
+
+        .about-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 5rem;
+        }
+
+        /* Sidebar - COMPLETELY CLEAN, NO EFFECTS */
+        .about-sidebar {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 2rem;
+            align-self: start;
+            width: 100%;
+            height: fit-content;
+            z-index: 100;
+        }
+
+        .about-sidebar-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .about-content {
+            padding-top: 2rem;
+        }
+
+        .about-content h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .about-content .intro {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.7);
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .about-content h2 {
+            font-size: 1.5rem;
+            margin-top: 3rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding-top: 2rem;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        .about-content h2:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
+        .about-content h3 {
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(0, 0, 0, 0.85);
+        }
+
+        .about-content h4 {
+            font-size: 1rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.15rem;
+            font-weight: 600;
+            color: rgba(0, 0, 0, 0.75);
+        }
+
+        .about-content p,
+        .about-content ul {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: rgba(0, 0, 0, 0.65);
+        }
+
+        .about-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .about-content ul li {
+            margin: 0.5rem 0;
+        }
+
+        .about-content .date {
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-content a {
+            color: rgba(0, 0, 0, 0.85);
+            text-decoration: underline;
+            transition: opacity 0.3s;
+        }
+
+        .about-content a:hover {
+            opacity: 0.6;
+        }
+
+        /* CV Buttons */
+        .cv-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cv-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            border: 2px solid rgba(0, 0, 0, 0.85);
+            cursor: pointer;
+        }
+
+        .cv-button:hover {
+            background: white;
+            color: rgba(0, 0, 0, 0.85);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Copy Tooltip */
+        .copy-tooltip {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .copy-tooltip.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        /* PDF Modal - SIMPLE & RELIABLE */
+        .pdf-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+        }
+
+        .pdf-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pdf-modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .pdf-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            font-weight: 300;
+            color: #333;
+            cursor: pointer;
+            z-index: 10001;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .pdf-modal-close:hover {
+            background: #f0f0f0;
+            transform: rotate(90deg);
+        }
+
+        .pdf-modal iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-sidebar {
+                position: relative;
+            }
+
+            nav {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .pdf-modal-content {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+        }
+
+        /* Version indicator */
+        .version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html#home">HOME</a>
+        <a href="index.html#main">MAIN</a>
+        <a href="about.html">ABOUT</a>
+        <a href="project.html">PROJECT</a>
+    </nav>
+
+    <!-- About ME Page -->
+    <section class="about-page">
+        <div class="about-container">
+            <!-- SIDEBAR: Clean image, no effects -->
+            <div class="about-sidebar">
+                <img src="assets/images/about/profile.jpg" 
+                     alt="Akina Tsutsumi" 
+                     class="about-sidebar-image"
+                     onload="console.log('✅ Profile image loaded successfully')"
+                     onerror="console.error('❌ Image failed to load. Path:', this.src)">
+            </div>
+
+            <div class="about-content">
+                <h1>About ME</h1>
+                <p class="intro">
+                    FASHION DESIGNER SPECIALISING IN FUNCTIONAL AND ACTIVEWEAR<br>
+                    SEEKING DESIGN OR DEVELOPMENT ROLES WITH LEADING SPORTS BRANDS<br>
+                    COMBINING TECHNICAL EXPERTISE WITH A PASSION FOR CONCEPT AND INNOVATION
+                </p>
+
+                <h2>EDUCATION</h2>
+                <h4>MA DEGREE</h4>
+                <p class="date">ROYAL COLLEGE OF ART MA FASHION</p>
+                <h4>BA DEGREE</h4>
+                <p class="date">LONDON COLLEGE OF FASHION BA WOMENSWEAR</p>
+
+                <h2>TECHNICAL SKILL</h2>
+                <h3>LANGUAGE</h3>
+                <p>JAPANESE (NATIVE) / CHINESE (NATIVE) / ENGLISH (ADVANCE)</p>
+                
+                <h3>HARD SKILL</h3>
+                <p>PATTERN CUTTING / DRAPING / SAMPLING / SEWING /<br>
+                TECHNICAL SPEC SHEET / FLAT DRAWING / KNITTING</p>
+                
+                <h3>DESIGN&DIGITAL TOOLS</h3>
+                <ul>
+                    <li>- Adobe Creative Suite: Illustrator/Photoshop/InDesign/Premiere Pro</li>
+                    <li>- 3D & CAD : CLO3D/Rhino/Cinema 4D/Blender/Reaper</li>
+                    <li>- Office & Documentation: Microsoft Office (Word/PowerPoint/Excel)</li>
+                    <li>- E-commerce: Shopify</li>
+                </ul>
+
+                <h2>INDUSTRY WORK EXPERIENCE</h2>
+                <h4>DINGYUNZHANG</h4>
+                <p class="date">(CHINA-SHANGHAI) Design Assistant<br>SEP2023 - MAR2024</p>
+                
+                <h4>NO NAME</h4>
+                <p class="date">(CHINA-SHANGHAI) Design Assistant<br>JUL2023 - SEP2023</p>
+                
+                <h4>POSTER GIRL</h4>
+                <p class="date">(UNITED KINGDOM-LONDON) Design Internship<br>APR 2022 - AUG 2022</p>
+                
+                <h4>SEEING Co.,Ltd</h4>
+                <p class="date">(JAPAN-TOKYO) Design Internship<br>APR 2022 - AUG 2022</p>
+
+                <h2>RETAIL WORK & OTHER EXPERIENCE</h2>
+                <h4>SIA School of International Art</h4>
+                <p class="date">(CHINA-SHANGHAI) Teaching Assistant<br>JUL2023 - SEP2023</p>
+                
+                <h4>Dr.Martens SEIBU SOGO</h4>
+                <p class="date">(JAPAN-TOKYO) Sales Assistant<br>NOV2020 - DEC2020</p>
+                
+                <h4>Baroque Japan Limited HENGLONG</h4>
+                <p class="date">(CHINA-TIANJIN) Sales Assistant<br>APR 2019 - NOV 2020</p>
+
+                <h2>MEDIA</h2>
+                <p><strong><a href="https://londonfashionweek.co.uk/graduate-preview" target="_blank">BFC GRADUATE PREVIEW 2025</a></strong><br>ROYAL COLLEGE OF ART MA FASHION</p>
+                <p><strong><a href="https://i-d.co/article/royal-college-of-art-london-ma-fashion-2025/?utm_campaign=feed&utm_medium=referral&utm_source=later-linkinbio&fbclid=PAQ0xDSwMH_rFleHRuA2FlbQIxMQABpzuMOPvjh0MEb1mQStU_fyu5eEImRBlx7LPIIMa7kNohAlVUupzawk5dwr43_aem_-hb0R0qYrNhwXSYeuUdmEQ" target="_blank">i-D FASHION</a></strong><br>FEATURED BY I-D IN RCA MA FASHION CLASS</p>
+                <p><strong><a href="https://www.lopinion.fr/o2-week-end/quel-sera-le-parfum-du-futur-selon-la-gen-z" target="_blank">O2 WEEKEND</a></strong><br>RCA X IFF PERFUME COLLAB PROJECT REPORTED</p>
+                <p><strong>FASHION UNITED/HYPEBEAST/SHOW STUDIO</strong><br>PUBLISHED AND REPORTED RUNWAY</p>
+
+                <h2>AWARDS</h2>
+                <p><strong>REAL LEATHER. STAY DIFFERENT (2022)</strong></p>
+                <p><strong>THE RAPID SLOW PROJECT (2023)</strong></p>
+                <p><strong>SHIMA SEIKI (2025)</strong><br>DIGITAL KNIT DESIGN PROJECT</p>
+                <p><strong><a href="https://cordwainers.org/footwear/cordwainers-footwear-awards/award-winners-2025/" target="_blank">CORDWAINERS FOOTWEAR AWARDS (2025)</a></strong><br>THE STUART WEITZMAN AWARD FOR THE BEST MA</p>
+
+                <h2 style="margin-top: 3rem;">CONTACT</h2>
+                <p><strong>Phone:</strong><br>
+                +81 08068956155 (JP)<br>
+                +86 18630884988 (CH)</p>
+                <p><strong>Email:</strong><br>
+                <a href="/cdn-cgi/l/email-protection#74151f1d1a15444c46415a011f341319151d185a171b19" onclick="copyEmail(event)"><span class="__cf_email__" data-cfemail="2f4e4446414e1f171d1a015a446f48424e4643014c4042">[email&#160;protected]</span></a> <span style="font-size: 0.8rem; color: rgba(0, 0, 0, 0.5);">(Click to copy)</span></p>
+                
+                <div class="cv-buttons">
+                    <button class="cv-button" onclick="openPdfModal('assets/documents/CV-Japanese.pdf', '日本語 CV')">日本語 CV</button>
+                    <button class="cv-button" onclick="openPdfModal('assets/documents/CV-English.pdf', 'English CV')">ENGLISH CV</button>
+                    <button class="cv-button" onclick="openPdfModal('assets/documents/CV-Chinese.pdf', '中文 CV')">中文 CV</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PDF Modal - SIMPLE IFRAME VERSION -->
+    <div id="pdfModal" class="pdf-modal">
+        <div class="pdf-modal-content">
+            <span class="pdf-modal-close" onclick="closePdfModal()">&times;</span>
+            <iframe id="pdfFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <!-- Copy Tooltip -->
+    <div id="copyTooltip" class="copy-tooltip">Email copied to clipboard!</div>
+
+    <!-- Version Indicator -->
+    <div class="version">v3.0</div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        console.log('=== About Page v2.9 Loaded ===');
+
+        // ========== EMAIL COPY FUNCTION ==========
+        function copyEmail(event) {
+            event.preventDefault();
+            const email = 'akina0825.uk@gmail.com';
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(email).then(() => {
+                        showCopyTooltip();
+                    }).catch(() => {
+                        document.execCommand('copy');
+                        showCopyTooltip();
+                    });
+                } else {
+                    document.execCommand('copy');
+                    showCopyTooltip();
+                }
+            } catch(err) {
+                console.error('Failed to copy email:', err);
+            }
+            
+            document.body.removeChild(tempInput);
+        }
+
+        function showCopyTooltip() {
+            const tooltip = document.getElementById('copyTooltip');
+            tooltip.classList.add('show');
+            setTimeout(() => tooltip.classList.remove('show'), 2000);
+        }
+
+        // ========== SIMPLE PDF MODAL (IFRAME) ==========
+        function openPdfModal(pdfUrl) {
+            console.log('📄 Opening PDF:', pdfUrl);
+            const modal = document.getElementById('pdfModal');
+            const iframe = document.getElementById('pdfFrame');
+            iframe.src = pdfUrl;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePdfModal() {
+            const modal = document.getElementById('pdfModal');
+            const iframe = document.getElementById('pdfFrame');
+            modal.classList.remove('active');
+            iframe.src = '';
+            document.body.style.overflow = '';
+        }
+
+        // Close on background click
+        document.getElementById('pdfModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePdfModal();
+            }
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePdfModal();
+            }
+        });
+
+        console.log('✅ About Page v2.9 - All scripts loaded successfully');
+    </script>
